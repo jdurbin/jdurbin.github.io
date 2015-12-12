@@ -5,7 +5,8 @@ locale: en_US
 description: A site about programming, biology, and math.
 logo: darkcenter.jpg
 search: true
-url: http://jdurbin.github.io
+url: http://127.0.0.1:4000
+#url: http://jdurbin.github.io
 
 # Jekyll configuration
 
