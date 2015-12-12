@@ -3,7 +3,7 @@
 title: Bayesian Sleeper Cell
 locale: en_US
 description: A site about programming, biology, and math.
-logo: site-logo.png
+logo: darkcenter.jpg
 search: true
 url: http://jdurbin.github.io
 
@@ -33,9 +33,9 @@ exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.
 
 # Site owner
 owner:
-  name: Your Name
-  avatar: bio-photo.jpg
-  email: you@email.com
+  name: James Durbin
+  avatar: reach.jpg
+  email: kdurbin@ucsc.edu
   disqus-shortname:
   twitter: #username
   facebook: #username
