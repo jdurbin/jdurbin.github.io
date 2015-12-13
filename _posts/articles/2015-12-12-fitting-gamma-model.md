@@ -2,7 +2,7 @@
 layout: post
 title: "Fitting a Gamma model to data using Metropolis Hastings"
 modified:
-categories: blog
+categories: articles
 excerpt:
 tags: []
 image:
