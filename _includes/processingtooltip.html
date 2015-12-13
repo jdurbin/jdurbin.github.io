@@ -1,0 +1,337 @@
+
+<script src="{{ relative }}assets/js/vendor/processing.min.js"></script>
+
+<script data-processing-target="pjs" type="application/processing">
+/* @pjs pauseOnBlur="true"; */  
+
+void roundedRect(int left, int top, int width, int height, int roundness)
+{
+ beginShape();               
+  vertex(left + roundness, top);
+  vertex(left + width - roundness, top);
+  bezierVertex(left + width - roundness, top,
+               left + width, top,
+               left + width, top + roundness);
+                          
+  vertex(left + width, top + roundness);
+  vertex(left + width, top + height - roundness);
+  bezierVertex(left + width, top + height - roundness,
+               left + width, top + height,
+               left + width - roundness, top + height);
+        
+  vertex(left + width - roundness, top + height);
+  vertex(left + roundness, top + height);        
+  bezierVertex(left + roundness, top + height,
+               left, top + height,
+               left, top + height - roundness);
+        
+  vertex(left, top + height - roundness);
+  vertex(left, top + roundness);
+  bezierVertex(left, top + roundness,
+               left, top,
+               left + roundness, top);        
+ endShape();
+}
+
+
+/***
+* A class to display a tooltip in a nice bubble. 
+**/
+class ToolTip{
+ String mText; 
+ int x;
+ int y; 
+ 
+ boolean doClip = true;
+ 
+ int myWidth;
+ int fontSize = 12;
+ int totalHeight = 0;
+ 
+ int rectWidthMargin;
+ int rectHeightMargin;
+  
+ int shadowOffset = 8;
+  
+ color tbackground = color(80,150,0,200); 
+ Pfont ttfont;
+ 
+ // Saved part of image that will be painted over by tooltip..
+ static PImage clip = null;
+ static int clipx;
+ static int clipy;
+ 
+ void setBackground(color c){
+  tbackground = c;
+ }
+   
+ ToolTip(_x,_y,tttext){
+  x = _x;
+  y = _y;
+  mText = tttext;
+  ttfont = createFont("Arial",20,true);
+  textFont(ttfont,fontSize);  
+    
+  // Figure out text size... font metrics don't seem quite right, at least on Chrome
+  String lines[] = split(mText,"\n");
+  int maxWidth = 0;
+  totalHeight = 0;
+  for(int i = 0;i < lines.length;i++){
+   totalHeight += fontSize;
+   String line = lines[i];
+   myWidth = textWidth(line);
+   if (int(myWidth) > int(maxWidth)){
+    maxWidth = myWidth;
+   }
+  }
+  myWidth = int(maxWidth);  
+ }
+ 
+ void restoreClip(){
+  imageMode(CORNER);
+  image(clip,clipx,clipy);
+ }
+ 
+ void hide(){
+  restoreClip();
+ }
+ 
+ 
+ void drawText(String mText,int x,int y,int fontSize){ 
+  // Print the text to screen
+   fill(255);
+  xindent = int(myWidth*(10/128));
+  yindent = int(fontSize*(10/128));
+   text(mText,x+xindent, y-yindent);
+ }
+
+ void drawBalloon(int x,int y, int w,int h){
+
+  w = int(w);
+  h = int(h);
+  rectWidthMargin = int(w*(10/64));
+  rectHeightMargin = int(h*(10/64));
+
+  rounding = int(h*(10/64));
+
+  //size(200,100);
+  strokeWeight(2);
+  stroke(0,0,0,10);  
+  fill(0,0,0,50);
+
+  roundedRect(x+shadowOffset+2,y+shadowOffset+2,w+rectWidthMargin,h+rectHeightMargin,rounding)     
+
+  stroke(255,255,255,200);  
+  fill(tbackground);
+  roundedRect(x,y, w+rectWidthMargin, h+rectHeightMargin,rounding)
+
+  // Highlight x,y coords... at top left...
+  //fill(0,0,255);
+  //rect(x,y,4,4);
+ }
+    
+ void display(){  
+  
+  if ((clip != null) && (doClip)){
+   restoreClip();
+  }
+  
+  // x and y are mouse coordinates, so determine where tip should be relative to that...       
+  int bx = int(x+5);
+  int by = int(y-totalHeight);  
+  rectRight = bx+myWidth +20;
+  rectTop = by-totalHeight+30;
+  
+  rectWidthMargin = int(myWidth*(10/64));
+  rectHeightMargin = int(totalHeight*(10/64));
+  
+  if (rectRight >= width){
+   bx = int(x-5-myWidth-rectWidthMargin); 
+  } 
+  
+  if (rectTop <= 0){
+   by = int(y+totalHeight+rectHeightMargin);
+  } 
+    
+  // Grab whatever is going to be behind our tooltip...
+  imageMode(CORNER);
+  clip = get(bx-20,by-20,myWidth+rectWidthMargin+60,totalHeight+rectHeightMargin+60);
+  clipx = bx-20;
+  clipy = by-20;  
+  
+  //bx = x+10;
+  //by = y - totalHeight;
+
+    
+  drawBalloon(bx,by-fontSize,myWidth,totalHeight+12);    
+  drawText(mText,bx,by,fontSize)
+ }
+}
+
+
+int r1;
+int g1;
+int b1;
+int r2;
+int g2;
+int b2;
+
+color start;
+color finish;
+float amt=0.01;
+
+int tooltipR=80;
+int tooltipG=150;
+int tooltipB=0;
+int tooltipAlpha=200;
+
+public class Sommet{
+
+  int x;
+  int y;
+  int iterX;
+  int iterY;
+ color c;
+   
+  public Sommet(int _x,int _y){
+    x = _x;
+    y = _y;
+    iterX = (int)random(-5,5);
+    iterY = (int)random(-5,5);
+
+  c = lerpColor(start,finish,amt);
+  amt+=0.02;
+  if (amt >=1) amt =0;
+  }
+   
+  public void update(){
+    x+=iterX;
+    if(x>800) {x=0;}
+    if(x<0)   {x=600;}       
+     
+    y+=iterY;
+    if(y>600) {y=0;}   
+    if(y<0)   {y=600;}         
+}
+   
+  public void draw(){
+    //fill(210, 230, 250);
+  fill(c);
+    stroke(100,150,250);
+    ellipse(x,y,15,15);
+  }
+   
+  public boolean closeEnough(Sommet s){
+    PVector v1 = new PVector(this.x, this.y);
+    PVector v2 = new PVector(s.x, s.y);
+    if(v1.dist(v2) < 100){
+      return true;
+    }
+    else{
+      return false;
+    } 
+}
+}
+ 
+List list;
+
+boolean isMouseIn = false;
+ 
+void setup() {  //setup function called initially, only once
+  size(690, 300);
+  frameRate(30);
+  smooth();
+  
+  create();
+}
+ 
+void create(){
+ 
+ randomSeed(millis());
+ r1 = int(round(random(0,1))*255);
+ g1 = int(round(random(0,1))*255);
+ b1 = int(round(random(0,1))*255);
+ randomSeed(millis());
+ r2 = int(round(random(0,1))*255);
+ g2 = int(round(random(0,1))*255);
+ b2 = int(round(random(0,1))*255);
+
+ start=color(r1,g1,b1);
+ finish = color(random(255),random(255),random(255));
+ 
+ list = new ArrayList();
+ background(51);  //set background white
+
+  for(int i=0; i<50; i++){
+    list.add(new Sommet((int)random(0,800), (int)random(0,600)));
+  }  
+}
+
+
+
+void keyPressed(){
+ if ((key == 'r') || (key == 'R')){
+  create();
+ }
+ 
+ if (key == 'a'){
+  tooltipAlpha +=10;
+  if (tooltipAlpha >= 255) tooltipAlpha = 0;
+ }
+ 
+ if (key == 'c'){
+  tooltipR = int(random(255));
+  tooltipG = int(random(255));
+  tooltipB = int(random(255));
+ } 
+}
+
+void draw() {  //draw function loops
+   
+    background(51);
+    for(int i=0; i<50; i++){
+   Sommet s1 = (Sommet)list.get(i);
+      for(int j=0; j<50; j++){
+        if(i!=j){
+          Sommet s2 = (Sommet)list.get(j);
+          if( s1.closeEnough(s2)){
+      //linecolor = lerp(s1.c,s2.c,0.1);
+            //stroke(linecolor); 
+       stroke(100,150,250);
+            line(s1.x,s1.y,s2.x, s2.y);
+          }
+        }
+      }     
+    }
+
+  // Draw dots after lines so lines appear behind dots. 
+  for(int i = 0;i < 50;i++){
+   Sommet s1 = (Sommet)list.get(i);
+    s1.draw();
+     s1.update();
+  }
+
+  // Display tooltip
+  x = mouseX;
+  y = mouseY;
+
+  if (isMouseIn){
+   String tipText = "Alpha: "+tooltipAlpha+"\nR: "+tooltipR+"  G: "+tooltipG+"  B: "+tooltipB+"\nmouseX= "+x+" mouseY= "+y; 
+   toolTip = new ToolTip(x,y,tipText);
+   toolTip.setBackground(color(tooltipR,tooltipG,tooltipB,tooltipAlpha));
+   toolTip.clip=false;
+   toolTip.display();
+  }
+}
+
+
+void mouseOver(){
+ isMouseIn = true;
+}
+
+void mouseOut(){
+ isMouseIn = false;;
+}
+</script>
+
+<canvas id="pjs"></canvas>

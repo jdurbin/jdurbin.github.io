@@ -25,3 +25,8 @@ This website is produced by *James Durbin*, a Bayesian Initiate and Bioinformati
 * Software tools
 * JVM based programming, especially Groovy
 
+## Q&A
+
+**Q:**  What reason do you have to believe the earth is flat?
+
+**A:**  I can see that it is flat when I look out my window. 
