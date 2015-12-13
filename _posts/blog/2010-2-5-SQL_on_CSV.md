@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Executing Arbitrary SQL on CSV Files"
+title: "Executing SQL on CSV Files in Groovy"
 modified:
 categories: blog
 excerpt:
-tags: [SQL,CSV,groovy,h2,database]
+tags: [sql,csv,groovy,h2,database]
 image:
   feature:
 date: 2010-2-5

@@ -4,7 +4,7 @@ title: "Create/open OmniOutliner notebooks from command line"
 modified:
 categories: blog
 excerpt:
-tags: [OmniOutliner,groovy]
+tags: [omnioutliner,groovy]
 image:
   feature:
 date: 2009-10-24

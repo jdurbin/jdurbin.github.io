@@ -4,7 +4,7 @@ title: "Processing.js First Impression"
 modified:
 categories: blog
 excerpt:
-tags: [canvas,HTML5,javascript,Processing,processing.js]
+tags: [canvas,html5,javascript,processing,processing.js]
 image:
   feature:
 date: 2011-10-02

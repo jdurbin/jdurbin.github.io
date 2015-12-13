@@ -4,7 +4,7 @@ title: "Using Groovlets in jQuery tutorial"
 modified:
 categories: blog
 excerpt:
-tags: [AJAX,groovy,jQuery]
+tags: [ajax,groovy,jquery]
 image:
   feature:
 date: 2010-7-10

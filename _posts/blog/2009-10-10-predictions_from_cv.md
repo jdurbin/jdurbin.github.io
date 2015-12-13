@@ -4,7 +4,7 @@ title: "Weka: getting predictions from cross validation"
 modified:
 categories: blog
 excerpt:
-tags: [groovy,weka,wekaMine]
+tags: [groovy,weka,wekamine]
 image:
   feature:
 date: 2009-10-10

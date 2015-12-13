@@ -4,7 +4,7 @@ title: "Gibbs sampler in Groovy"
 modified:
 categories: blog
 excerpt:
-tags: [Gibbs sampling,MCMC,groovy]
+tags: [gibbs sampling,mcmc,groovy]
 image:
   feature:
 date: 2011-7-24
