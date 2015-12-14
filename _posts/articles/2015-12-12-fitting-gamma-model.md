@@ -34,7 +34,7 @@ With priors for \\(\alpha\\) and \\(\beta\\):  \\(P(\alpha) = \frac{1}{10}e^{\fr
 \pi(\alpha,\beta \| \underset{\sim}y) = \left(\frac{\beta^\alpha}{\Gamma(\alpha)}\right)^n\prod_{i=1}^ny_i^{\alpha-1}\left(e^{-\beta\sum\limits_{i=1}^n y_i}\right) \frac{1}{10}e^{\frac{\alpha}{10}} \frac{1}{10}e^{\frac{\beta}{10}}
 \\]
 
-Since  \\(P(\beta) = \frac{1}{10}e^{\frac{\beta}{10}} \\)  is a constant with respect to \\(\alpha\\), the acceptance probability for \\(\alpha\\) is
+Since  \\(P(\beta) = \frac{1}{10}e^{\frac{\beta}{10}} \\)  is a constant with respect to \\(\alpha\\), the acceptance probability for \\(\alpha\\) is... *(TO BE CONTINUED...)*
 
 \\[
 a_{\alpha} = \frac{\pi(\alpha^*,\beta|\underset{\sim}y)}{\pi(\alpha_i,\beta\|\underset{\sim}y)}=

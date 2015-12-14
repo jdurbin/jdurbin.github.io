@@ -10,55 +10,48 @@ image:
 date: 2012-6-5
 ---
 
-### The need for a csv/tab viewer
-
-Do you have TSV/CSV files that you'd like to load into a spreadsheet and explore but they are just too large for Excel or Numbers?  `viewtab`, which can be obtained by installing [durbinlib](https://github.com/jdurbin/durbinlib) is the tool for you! 
-
-In a [previous post]({{ site.url }}/blog/csvsql/) I showed 'csvsql' which is one tool in my arsenel of TSV/CSV file handling.  Today's posts shows another tool.  The problems this tool addresses is the need to figure out what is in some file, what kind of text or numbers, to explore the ranges of the numbers with histograms or scatter plots, etc.   I often get data files from scientists or from the supplements of journal papers without any clue what is in the file.   Often I'm even faced with trying to figure out which of many files might contain information that I need. One can `cat` the file, of course, but if the file has many columns a simple cat quickly becomes illegible.  There are fancier things one can do with `cat` such as:
+### viewtab
+![viewtabimage]({{ site.url }}/images/viewtab.png)
+In a [previous post]({{ site.url }}/blog/csvsql/) I showed `csvsql` which is one program in my arsenel of TSV/CSV file handling tools.  Today's post highlights another tool, `viewtab`, which is a fast read-only spreadsheet for exploring data in tab files.   I often get data files from scientists or from the supplements of journal papers with only a vague clue what is in the file.  I can `cat` the file but if the file has many columns a simple cat quickly becomes illegible.  There are fancier things you can do with `cat` such as:
 
 `cat test.csv  | column -s, -t | less -#2 -N -S`
 
-This gives you formatted columns that you can scroll through, but I find it clunky.  The columns can not be easily sorted, moved around, and so on.  Importing the file into a spreadsheet is another option, but for some reason every spreadsheet out there takes an eon to start up. Some of them won't take csv or tab files from the command line so that you have to launch the spreadsheet then navigate to the file in question which is actually one of the biggest drawbacks of spreadsheets for my use case. Even worse, most spreadsheets simply choke on what are for me modest sized data files (say, a few tens of thousands of rows with a few hundreds of columns).  
+This gives you formatted columns that you can scroll through, but I find it clunky. Importing into spreadsheets often simply fails for the sized datasets I'm working with (i.e. 50,000 rows by 1500 columns) and tends to be slow and sometimes not easy to invoke from the command line.  
 
-### viewtab
-After facing this irritation dozens of times, I decided to see if I could hack together a csv/tab viewer that would offer the advantages of a spreadsheet with the speed and command-line convenience of cat. The resulting script is run like this:
-
-`viewtab testfile.csv`
- 
- It takes about 6 seconds to load a 9803 x 296 csv file and display it. Compare that with Apple's Numbers which takes 3 seconds to launch, 3-4 seconds for me to find the file, tries to load it for about 8 seconds and finally tells you the file is too big and simply gives up! 
- 
- 
- The results of viewtab look like this (here the expression data from a 2012 breast cancer paper by van de Vijver):
- 
- 
- ![viewtabimage]({{ site.url }}/images/viewtab.png)
-
-`viewtab` also allows you to select a row or column (with right-click menu) and get a histogram of that row or column, as seen here:
-
-![viewtabhistimage]({{ site.url }}/images/viewtabhist.png) 
-
-You can even select two rows/columns and generate a scatter plot of one vs the other.  Additional analysis functions are in the works. 
+I wrote `viewtab` to address these issues.  `viewtab` is a fast read-only spreadsheet that can be invoked from the command line.  `viewtab` is bundled with [durbinlib](https://github.com/jdurbin/durbinlib), along with [`csvsql`]({{ site.url }}/blog/csvsql/) and an number of other very useful scripts.
 
 ### Installation
-
-`viewtab`, `csvsql`, and a number of other very useful scripts are bundled with [durbinlib](https://github.com/jdurbin/durbinlib), which is my kitchen sink of libraries and scripts I use every day in my bioinformatics work.  The easiest way to install the library is to clone durbinlib, build it with [ant](http://ant.apache.org), and then add the `scripts` directory to your path. 
+The easiest way to install the library is to clone durbinlib, build it with [ant](http://ant.apache.org), and then add the `scripts` directory to your path and the jar directory to your classpath, like:  
 
 {% highlight bash %}
 git clone git://github.com/jdurbin/durbinlib.git
 cd durbinlib
 ant install
 export PATH=$PATH:pathtodurbinlib/scripts/ 
+export CLASSPATH=pathtodurbinlib/target/jar/*
 {% endhighlight %}
 
 I highly recommend that you set an environment variable to give Groovy/Java the option to use a lot of RAM:
 
 `export JAVA_OPTS='-Xmx3000m'`
 
-Durbinlib requires fairly recent versions of [Java](https://www.java.com/en/download/),[Groovy](http://groovy-lang.org), and [Ant](http://ant.apache.org).  All other dependencies are bundled into the Git repository. 
+`durbinlib` requires fairly recent versions of [Java](https://www.java.com/en/download/),[Groovy](http://groovy-lang.org), and [Ant](http://ant.apache.org).  All other dependencies are bundled into the Git repository.
+ 
+### Usage
+`viewtab` is invoked from the command line like this:
 
-### Complete first version of the code
+`viewtab vijver2012_expression.csv`
+ 
+For this 9803 x 296 file of gene expression values,  Apple's Numbers takes 3 seconds to launch, 3-4 seconds for me to find the file in the file dialog, tries to load it for about 7 seconds, and finally tells you the file is too big and simply gives up.  Running viewtab on this files takes 6 seconds to load and display.  Even better, both vertical and horizontal scrolling are lag free. 
 
-To illustrate how easy it is to hack together a GUI app with Groovy, below is the complete source for the first version of `viewtab` (before adding plotting and other extras). 
+`viewtab` allows you to select a row or column (with right-click menu) and get a histogram of that row or column or a scatter plot of two different rows.  For example, here is viewtab showing two histograms:
+
+![viewtabhistimage]({{ site.url }}/images/viewtabhist.png) 
+
+The resulting charts can have a custom title and axis labels, can be scaled or axis adjusted, and the results can be saved to a file or printed.  
+
+### Viewtab source
+To illustrate how easy it is to hack together a GUI app with Groovy, below is the source for the first draft of `viewtab` (before adding plotting and other extras).  `durbinlib`, in particular `durbin.util.Table` is required and bundled with the script.  There are no other dependencies. 
 
 {% highlight groovy %}
 #!/usr/bin/env groovy 
