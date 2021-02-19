@@ -13,7 +13,7 @@ image:
 
 This website is the home of the Bayesian Sleeper Cell, part of a Bayesian shadow army that backs the Bayesian Conspiracy. 
 
-This website is produced by *James Durbin*, a Bayesian Initiate and Bioinformatics Ph.D. candidate.  
+This website is produced by *James Durbin*, a Bayesian Initiate and Genomics Researcher. 
 
 ## Bayesian Sleeper Cell concerns itself with:
 
